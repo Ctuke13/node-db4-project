@@ -7,11 +7,12 @@ exports.up = async function (knex) {
   return knex.schema
     .createTable("recipes", (tbl) => {
       tbl.increments("recipe_id");
-      tbl.string("recipe_name", 128).notNullable();
+      tbl.string("recipe_name", 128).notNullable().unique();
     })
     .createTable("ingredients", (tbl) => {
       tbl.increments("ingredients_id");
-      tbl.string("ingredient_name").notNullable();
+      tbl.string("ingredient_name", 128).notNullable().unique();
+      tbl.string("ingredient_unit", 50);
     })
     .createTable("steps", (tbl) => {
       tbl.increments("step_id");
@@ -29,6 +30,7 @@ exports.up = async function (knex) {
     })
     .createTable("step_ingredients", (tbl) => {
       tbl.increments("step_ingredients_id");
+      tbl.float("quantity").notNullable();
       tbl
         .integer("step_id")
         .unsigned()
@@ -45,7 +47,6 @@ exports.up = async function (knex) {
         .inTable("ingredients")
         .onDelete("RESTRICT")
         .onUpdate("RESTRICT");
-      tbl.float("quantity").notNullable();
     });
 };
 
